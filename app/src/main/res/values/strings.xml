@@ -1,0 +1,104 @@
+<resources>
+    <string name="app_name">StudyNotesSchedule</string>
+
+    <!--  Auth  -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Login or Register</string>
+    <string name="action_sign_in_short">Login</string>
+    <string name="welcome">"Welcome!"</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="login_failed">"Login failed"</string>
+    <string name="title_activity_zaloguj">Login</string>
+
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="hello_first_fragment">Hello first fragment</string>
+    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+
+    <!-- Stringi w activity_add_lesson -->
+    <string name="addLessonTextViewMain">Add Lesson</string>
+    <string name="addLessonEditTextHint">Name</string>
+    <string name="addLessonTextViewStartTime">Start time: </string>
+    <string name="addLessonEditTextHH">HH</string>
+    <string name="addLessonTextViewHour">:</string>
+    <string name="addLessonEditTextMM">MM</string>
+    <string name="addLessonEditTextDurationHint">Range</string>
+    <string name="addLessonTextViewMin">min</string>
+    <string name="addLessonEditTextRoomHint">Room</string>
+    <string name="addLessonTextViewDay">Day</string>
+    <string name="addLessonButtonSave">Save</string>
+    <string name="addLessonButtonCancel">Cancel</string>
+
+    <!-- Stringi w activity_add_note -->
+    <string name="addNoteTextViewName">Name: </string>
+    <string name="addNoteEditTextHintMain">...</string>
+    <string name="addNoteTextViewDate">Date</string>
+    <string name="addNoteButtonSave">Save</string>
+    <string name="addNoteButtonCancel">Cancel</string>
+
+    <!-- Stringi w activity_calendar -->
+    <string name="calendarButtonPrev">prev</string>
+    <string name="calendarTextViewAct">act</string>
+    <string name="calendarButtonNext">next</string>
+    <string name="calendarButtonBackDate">Back to current date</string>
+    <string name="calendarTextViewMon">Mon</string>
+    <string name="calendarTextViewTue">Tue</string>
+    <string name="calednarTextViewWed">Wed</string>
+    <string name="calendarTextViewThu">Thu</string>
+    <string name="calendarTextViewFri">Fri</string>
+    <string name="calendarTextViewSat">Sat</string>
+    <string name="calendarTextViewSun">Sub</string>
+    <string name="calendarButtonAddNote">Add new note: </string>
+    <string name="calendarButtonDeleteNote">Delete note</string>
+    <string name="calendarBackButton">Home</string>
+
+    <!-- activity_login -->
+    <string name="loginEditTextHintLogin">Username</string>
+    <string name="loginEditTextHintPassword">Password</string>
+    <string name="loginButtonBack">Back</string>
+    <string name="loginButtonLogin">Login</string>
+
+    <!-- activity_main -->
+    <string name="mainPageTextView">next</string>
+    <string name="mainPageCurrentUser">currentUser</string>
+    <string name="mainPageLogOut">Wyloguj</string>
+
+    <!-- activity_register -->
+    <string name="registerEditTextHintName">Name</string>
+    <string name="registerEditTextHintSurname">Surname</string>
+    <string name="registerEditTextHintFieldOfStudies">Major</string>
+    <string name="registerEditTextHintLogin">Username</string>
+    <string name="registerEditTextHintPassword">Password</string>
+    <string name="registerButtonBack">Back</string>
+    <string name="registerButtonRegister">Register</string>
+
+    <!-- activity_start -->
+    <string name="startButtonLogin">Login</string>
+    <string name="startButtonRegister">Register</string>
+
+    <!-- activity_timetable -->
+    <string name="timetableButtonPrev">prev</string>
+    <string name="timetableTextViewActualDay">actualDay</string>
+    <string name="timetableButtonNext">next</string>
+    <string name="timetableButtonAddLesson">Dodaj lekcję</string>
+    <string name="timetableButtonDeleteLesson">Usuń lekcję</string>
+    <string name="timetableBackButton">Strona Główna</string>
+
+    <!-- calendar_cell -->
+    <string name="calendarCellTextView">1</string>
+
+    <!-- note_cell -->
+    <string name="noteCellTextView">Note</string>
+
+    <!-- lesson_cell -->
+    <string name="lessonCellTextView">Lesson</string>
+    <string name="lessonCellTime">Time</string>
+    <string name="lessonCellRoom">Room</string>
+
+</resources>
