@@ -1,41 +1,46 @@
 package vn.edu.fpt.studynotesschedule.activity;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 
-public class Login extends AppCompatActivity {
-   EditText login_input, password_input;
+import vn.edu.fpt.studynotesschedule.R;
+import vn.edu.fpt.studynotesschedule.helper.*;
+
+
+public class LoginActivity extends AppCompatActivity {
+   EditText usernameInput, passwordInput;
    Button loginButton, backButton;
-   DataBaseHelper myDB;
-   String login;
+   DatabaseHelper myDB;
+   String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        login_input = findViewById(R.id.login);
-        password_input = findViewById(R.id.password);
+        usernameInput = findViewById(R.id.login);
+        passwordInput = findViewById(R.id.password);
         loginButton = findViewById(R.id.loginButton);
         backButton = findViewById(R.id.backButton);
 
-        myDB = new DataBaseHelper(Login.this);
+        myDB = new DatabaseHelper(LoginActivity.this);
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // logowanie przez sprawdzenie bazy danych
-                if (myDB.login_user(login_input.getText().toString(), password_input.getText().toString())) {
-                    login = login_input.getText().toString();
+                String username = usernameInput.getText().toString();
+                String password = passwordInput.getText().toString();
+                if (myDB.isUserValid(username, password)) {
+                    LoginActivity.this.userId = myDB.getUserId(usernameInput.getText().toString());
                     openMainPage();
                 } else {
-                    Toast.makeText(Login.this, "Spróbuj jeszcze raz!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Username or Password incorrect!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -51,13 +56,13 @@ public class Login extends AppCompatActivity {
     public void openMainPage() {
         Intent intent = new Intent(this, MainActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putString("Login", login_input.getText().toString());
+        bundle.putString("userId", userId);
         intent.putExtras(bundle);
         startActivity(intent);
     }
 
     public void openStart() {
-        Intent intent = new Intent(this, Start.class);
+        Intent intent = new Intent(this, StartActivity.class);
         startActivity(intent);
     }
 }

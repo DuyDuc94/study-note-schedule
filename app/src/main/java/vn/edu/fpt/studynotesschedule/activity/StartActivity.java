@@ -1,12 +1,15 @@
 package vn.edu.fpt.studynotesschedule.activity;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-public class Start extends AppCompatActivity {
+import androidx.appcompat.app.AppCompatActivity;
+
+import vn.edu.fpt.studynotesschedule.R;
+
+public class StartActivity extends AppCompatActivity {
     Button loginButton, registerButton;
 
     @Override
@@ -33,14 +36,13 @@ public class Start extends AppCompatActivity {
         });
     }
 
-    // otwarcie nowego okna
     public void openLoginActivity() {
-        Intent intent = new Intent(this, Login.class);
+        Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
 
     public void openRegisterActivity() {
-        Intent intent = new Intent(this, Register.class);
+        Intent intent = new Intent(this, RegisterActivity.class);
         startActivity(intent);
     }
 }

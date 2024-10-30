@@ -20,33 +20,30 @@ import java.util.List;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private Context context;
-    // tabela 1 - User
     private final static String DATABASE_NAME = "StudyNotesSchedule.db";
 
     private final static String TABLE_NAME_USER = "Users";
-    private final static String TABLE_COLUMN_ID_USER = "Id";
-    private final static String TABLE_COLUMN_NAME_USER = "Name";
-    private final static String TABLE_COLUMN_SURNAME_USER = "Surname";
-    private final static String TABLE_COLUMN_UNIVERISTY_USER = "Study";
-    private final static String TABLE_COLUMN_LOGIN_USER = "Login";
-    private final static String TABLE_COLUMN_PASSWORD_USER = "Password";
+    private final static String TABLE_COLUMN_USER_ID = "Id";
+    private final static String TABLE_COLUMN_USER_NAME = "Name";
+    private final static String TABLE_COLUMN_USER_SURNAME = "Surname";
+    private final static String TABLE_COLUMN_USER_UNIVERSITY = "University";
+    private final static String TABLE_COLUMN_USER_USERNAME = "Username";
+    private final static String TABLE_COLUMN_USER_PASSWORD = "Password";
 
-    // tabela 2 - Note
     private final static String TABLE_NAME_NOTE = "Notes";
-    private final static String TABLE_COLUMN_ID_NOTE = "Id";
-    private final static String TABLE_COLUMN_TEXT_NOTE = "Text";
-    private final static String TABLE_COLUMN_DATE_NOTE = "LocalDate";
-    private final static String TABLE_COLUMN_USER_LOGIN_NOTE = "UserLogin";
+    private final static String TABLE_COLUMN_NOTE_ID = "Id";
+    private final static String TABLE_COLUMN_NOTE_TEXT = "Text";
+    private final static String TABLE_COLUMN_NOTE_DATE = "LocalDate";
+    private final static String TABLE_COLUMN_NOTE_USER_ID = "UserId";
 
-    // tabela 3 - Lesson
     private final static String TABLE_NAME_LESSON = "Lessons";
-    private final static String TABLE_COLUMN_ID_LESSON = "Id";
-    private final static String TABLE_COLUMN_START_LESSON = "StartTime";
-    private final static String TABLE_COLUMN_DAY_LESSON = "Day";
-    private final static String TABLE_COLUMN_ROOM_LESSON = "Room";
-    private final static String TABLE_COLUMN_TEXT_LESSON = "Text";
-    private final static String TABLE_COLUMN_DURATION_LESSON = "Duration";
-    private final static String TABLE_COLUMN_USER_LOGIN_LESSON = "UserLogin";
+    private final static String TABLE_COLUMN_LESSON_ID = "Id";
+    private final static String TABLE_COLUMN_LESSON_START = "StartTime";
+    private final static String TABLE_COLUMN_LESSON_DAY = "Day";
+    private final static String TABLE_COLUMN_LESSON_ROOM = "Room";
+    private final static String TABLE_COLUMN_LESSON_TEXT = "Text";
+    private final static String TABLE_COLUMN_LESSON_DURATION = "Duration";
+    private final static String TABLE_COLUMN_LESSON_USER_ID = "UserId";
 
     public DatabaseHelper(@Nullable Context context) {
         super(context, DATABASE_NAME, null, 1);
@@ -56,44 +53,39 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         String queryUser = "CREATE TABLE " + TABLE_NAME_USER +
-                " (" + TABLE_COLUMN_ID_USER + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                TABLE_COLUMN_NAME_USER + " TEXT, " +
-                TABLE_COLUMN_SURNAME_USER + " TEXT, " +
-                TABLE_COLUMN_UNIVERISTY_USER + " TEXT, " +
-                TABLE_COLUMN_LOGIN_USER + " TEXT, " +
-                TABLE_COLUMN_PASSWORD_USER + " TEXT);";
+                " (" + TABLE_COLUMN_USER_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                TABLE_COLUMN_USER_NAME + " TEXT, " +
+                TABLE_COLUMN_USER_SURNAME + " TEXT, " +
+                TABLE_COLUMN_USER_UNIVERSITY + " TEXT, " +
+                TABLE_COLUMN_USER_USERNAME + " TEXT, " +
+                TABLE_COLUMN_USER_PASSWORD + " TEXT);";
         db.execSQL(queryUser);
 
         String queryNote = "CREATE TABLE " + TABLE_NAME_NOTE +
-                " (" + TABLE_COLUMN_ID_NOTE + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                TABLE_COLUMN_TEXT_NOTE + " TEXT, " +
-                TABLE_COLUMN_DATE_NOTE + " TEXT, " +
-                TABLE_COLUMN_USER_LOGIN_NOTE + " TEXT, " +
-                " FOREIGN KEY " + "(" + TABLE_COLUMN_USER_LOGIN_NOTE + ")" + " REFERENCES " + TABLE_NAME_USER + "(" + TABLE_COLUMN_LOGIN_USER + ")" + ");";
+                " (" + TABLE_COLUMN_NOTE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                TABLE_COLUMN_NOTE_TEXT + " TEXT, " +
+                TABLE_COLUMN_NOTE_DATE + " TEXT, " +
+                TABLE_COLUMN_NOTE_USER_ID + " TEXT, " +
+                " FOREIGN KEY " + "(" + TABLE_COLUMN_NOTE_USER_ID + ")" + " REFERENCES " + TABLE_NAME_USER + "(" + TABLE_COLUMN_USER_ID + ")" + ");";
         db.execSQL(queryNote);
 
         String queryLesson = "CREATE TABLE " + TABLE_NAME_LESSON +
-                " (" + TABLE_COLUMN_ID_LESSON + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                TABLE_COLUMN_START_LESSON + " TEXT, " +
-                TABLE_COLUMN_DAY_LESSON + " TEXT, " +
-                TABLE_COLUMN_ROOM_LESSON + " TEXT, " +
-                TABLE_COLUMN_TEXT_LESSON + " TEXT, " +
-                TABLE_COLUMN_DURATION_LESSON + " INTEGER, " +
-                TABLE_COLUMN_USER_LOGIN_LESSON + " TEXT, " +
-                " FOREIGN KEY " + "(" + TABLE_COLUMN_USER_LOGIN_LESSON + ")" + " REFERENCES " + TABLE_NAME_USER + "(" + TABLE_COLUMN_LOGIN_USER + ")" + ");";
+                " (" + TABLE_COLUMN_LESSON_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                TABLE_COLUMN_LESSON_START + " TEXT, " +
+                TABLE_COLUMN_LESSON_DAY + " TEXT, " +
+                TABLE_COLUMN_LESSON_ROOM + " TEXT, " +
+                TABLE_COLUMN_LESSON_TEXT + " TEXT, " +
+                TABLE_COLUMN_LESSON_DURATION + " INTEGER, " +
+                TABLE_COLUMN_LESSON_USER_ID + " TEXT, " +
+                " FOREIGN KEY " + "(" + TABLE_COLUMN_LESSON_USER_ID + ")" + " REFERENCES " + TABLE_NAME_USER + "(" + TABLE_COLUMN_USER_ID + ")" + ");";
         db.execSQL(queryLesson);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int i, int i1) {
-
-        // stworzy nową tabelę USERS
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_USER);
-        // stworzy nową tabelę NOTES
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_NOTE);
-        // stworzy nową tabelę LESSON
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_LESSON);
-        // tworzenie nowej tabeli
         onCreate(db);
     }
 
@@ -101,17 +93,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
 
-        cv.put(TABLE_COLUMN_NAME_USER, user.getName());
-        cv.put(TABLE_COLUMN_SURNAME_USER, user.getSurname());
-        cv.put(TABLE_COLUMN_UNIVERISTY_USER, user.getUniversity());
-        cv.put(TABLE_COLUMN_LOGIN_USER, user.getLogin());
-        cv.put(TABLE_COLUMN_PASSWORD_USER, user.getPassword());
+        cv.put(TABLE_COLUMN_USER_NAME, user.getName());
+        cv.put(TABLE_COLUMN_USER_SURNAME, user.getSurname());
+        cv.put(TABLE_COLUMN_USER_UNIVERSITY, user.getUniversity());
+        cv.put(TABLE_COLUMN_USER_USERNAME, user.getUsername());
+        cv.put(TABLE_COLUMN_USER_PASSWORD, user.getPassword());
 
         long result = db.insert(TABLE_NAME_USER, null, cv);
         if(result == -1) {
-            Toast.makeText(context, "Bład wprowadzenia danych do bazy danych.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Error when add User into DB", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(context, "Dodano Użytkownika!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "User added successful!", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -121,15 +113,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         String date = CalendarHelper.dateFormatter(note.getDate());
 
-        cv.put(TABLE_COLUMN_TEXT_NOTE, note.getText());
-        cv.put(TABLE_COLUMN_DATE_NOTE, date);
-        cv.put(TABLE_COLUMN_USER_LOGIN_NOTE, note.getNoteOwner().getLogin());
+        cv.put(TABLE_COLUMN_NOTE_TEXT, note.getText());
+        cv.put(TABLE_COLUMN_NOTE_DATE, date);
+        cv.put(TABLE_COLUMN_NOTE_USER_ID, note.getNoteOwner().getId());
 
         long result = db.insert(TABLE_NAME_NOTE, null, cv);
         if(result == -1) {
-            Toast.makeText(context, "Bład wprowadzenia danych do bazy danych.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Error when add Note into DB", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(context, "Dodano Notatkę!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Note added successful!", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -140,24 +132,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String startTime = lesson.getStartTime().toString();
         String dayOfWeek = lesson.getDayOfWeek();
 
-        cv.put(TABLE_COLUMN_START_LESSON, startTime);
-        cv.put(TABLE_COLUMN_DAY_LESSON, dayOfWeek);
-        cv.put(TABLE_COLUMN_ROOM_LESSON, lesson.getRoom());
-        cv.put(TABLE_COLUMN_TEXT_LESSON, lesson.getText());
-        cv.put(TABLE_COLUMN_DURATION_LESSON, lesson.getDuration());
-        cv.put(TABLE_COLUMN_USER_LOGIN_LESSON, lesson.getLessonOwner().getLogin());
+        cv.put(TABLE_COLUMN_LESSON_START, startTime);
+        cv.put(TABLE_COLUMN_LESSON_DAY, dayOfWeek);
+        cv.put(TABLE_COLUMN_LESSON_ROOM, lesson.getRoom());
+        cv.put(TABLE_COLUMN_LESSON_TEXT, lesson.getText());
+        cv.put(TABLE_COLUMN_LESSON_DURATION, lesson.getDuration());
+        cv.put(TABLE_COLUMN_LESSON_USER_ID, lesson.getLessonOwner().getId());
 
         long result = db.insert(TABLE_NAME_LESSON, null, cv);
         if(result == -1) {
-            Toast.makeText(context, "Bład wprowadzenia danych do bazy danych.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Error when add Lesson into DB", Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(context, "Dodano Lekcję!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Lesson added successful!", Toast.LENGTH_SHORT).show();
         }
     }
 
     public boolean isUserValid(String login, String password) {
-        String queryLogin = "SELECT " + TABLE_COLUMN_LOGIN_USER +  " FROM " + TABLE_NAME_USER;
-        String queryPassword = "SELECT " + TABLE_COLUMN_PASSWORD_USER + " FROM " + TABLE_NAME_USER;
+        String queryLogin = "SELECT " + TABLE_COLUMN_USER_USERNAME +  " FROM " + TABLE_NAME_USER;
+        String queryPassword = "SELECT " + TABLE_COLUMN_USER_PASSWORD + " FROM " + TABLE_NAME_USER;
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursorLogin = db.rawQuery(queryLogin, null);
@@ -176,8 +168,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return false;
     }
 
-    public List<String> getCurrentUserData(String login) {
-        String query = "SELECT * FROM " + TABLE_NAME_USER + " WHERE " + TABLE_COLUMN_LOGIN_USER + " = " + "\"" + login + "\"";
+    public List<String> getCurrentUserData(String userId) {
+        String query = "SELECT * FROM " + TABLE_NAME_USER + " WHERE " + TABLE_COLUMN_USER_ID + " = " + "\"" + userId + "\"";
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursorUser = db.rawQuery(query, null);
@@ -191,9 +183,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return currentUserData;
     }
 
+    public String getUserId(String login) {
+        String query = "SELECT " + TABLE_COLUMN_USER_ID + " FROM " + TABLE_NAME_USER + " WHERE " + TABLE_COLUMN_USER_USERNAME + " = " + "\"" + login + "\"";
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        Cursor cursor = db.rawQuery(query, null);
+        cursor.moveToFirst();
+
+        return cursor.getString(0);
+    }
+
     public List<Note> getAllNotes(User currentUser) {
-        String userLogin = currentUser.getLogin();
-        String queryNote = "SELECT * FROM " + TABLE_NAME_NOTE + " WHERE " + TABLE_COLUMN_USER_LOGIN_NOTE + " = " + "\"" + userLogin + "\"";
+        String userId = currentUser.getId();
+        String queryNote = "SELECT * FROM " + TABLE_NAME_NOTE + " WHERE " + TABLE_COLUMN_NOTE_USER_ID + " = " + "\"" + userId + "\"";
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursorNote = db.rawQuery(queryNote, null);
@@ -213,8 +215,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public List<Lesson> getAllLessons(User currentUser) {
-        String userLogin = currentUser.getLogin();
-        String queryLesson = "SELECT * FROM " + TABLE_NAME_LESSON + " WHERE " + TABLE_COLUMN_USER_LOGIN_LESSON + " = " + "\"" + userLogin + "\"";
+        String userId = currentUser.getId();
+        String queryLesson = "SELECT * FROM " + TABLE_NAME_LESSON + " WHERE " + TABLE_COLUMN_LESSON_USER_ID + " = " + "\"" + userId + "\"";
         SQLiteDatabase db = this.getReadableDatabase();
 
         Cursor cursorLesson = db.rawQuery(queryLesson, null);
@@ -242,14 +244,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         long result = db.delete(TABLE_NAME_NOTE, "Text=? and LocalDate=?", new String[]{text, day});
         if(result == -1){
             Toast.makeText(context, "Can not find note to delete!", Toast.LENGTH_SHORT).show();
-            return notes;
         } else {
-            Toast.makeText(context, "Delete note successfully!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Delete note successful!", Toast.LENGTH_SHORT).show();
 
             notes.removeAll(notes);
             notes.addAll(getAllNotes(currentUser));
-            return notes;
         }
+        return notes;
     }
 
     public List<Lesson> deleteLesson(String text, String dayOfWeek, List<Lesson> lessons, User currentUser) {
@@ -257,13 +258,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         long result = db.delete(TABLE_NAME_LESSON, "Text=? and Day=?" , new String[]{text, dayOfWeek});
         if(result == -1){
             Toast.makeText(context, "Can not find lesson to delete!", Toast.LENGTH_SHORT).show();
-            return lessons;
         } else {
-            Toast.makeText(context, "Delete lesson successfully!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Delete lesson successful!", Toast.LENGTH_SHORT).show();
 
             lessons.removeAll(lessons);
             lessons.addAll(getAllLessons(currentUser));
-            return lessons;
         }
+        return lessons;
     }
 }

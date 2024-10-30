@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import vn.edu.fpt.studynotesschedule.R;
 import vn.edu.fpt.studynotesschedule.activity.CalendarMain;
 import vn.edu.fpt.studynotesschedule.helper.CalendarHelper;
 import vn.edu.fpt.studynotesschedule.view.CalendarViewHolder;
@@ -27,7 +28,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> {
     @NonNull
     @Override
     public CalendarViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // pojedyncza komorka
+        // single cell
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.calendar_cell, parent, false);
         ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
@@ -38,7 +39,7 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull CalendarViewHolder calendarViewHolder, int position) {
-        // zaznaczenie wybranej daty
+        // mark selected date
         final LocalDate date = days.get(position);
 
         if(date == null)
@@ -47,10 +48,10 @@ public class CalendarAdapter extends RecyclerView.Adapter<CalendarViewHolder> {
             calendarViewHolder.dayOfMonth.setText(String.valueOf(date.getDayOfMonth()));
             if(date.equals(CalendarHelper.selectedDate))
                 calendarViewHolder.parentView.setBackgroundColor(Color.parseColor("#CCE5FF"));
-            // aktualna data
+            // current date
             else if(date.equals(LocalDate.now()))
                 calendarViewHolder.parentView.setBackgroundColor(Color.parseColor("#A0A0A0"));
-            // jesli jest notatka w danym dniu
+            // if there is a note on a given day
             else {
                 for (int i = 0; i < 42; i++) {
                     for (int j = 0; j < CalendarMain.currentUserNoteList.size(); j++) {

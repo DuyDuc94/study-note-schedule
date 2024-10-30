@@ -15,12 +15,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import vn.edu.fpt.studynotesschedule.R;
 import vn.edu.fpt.studynotesschedule.helper.*;
 import vn.edu.fpt.studynotesschedule.model.*;
 
 public class AddLessonActivity extends AppCompatActivity {
     private User currentUser;
-    private String login;
+    private String userId;
     private List<String> currentUserData;
     private DatabaseHelper myDB;
 
@@ -42,12 +43,11 @@ public class AddLessonActivity extends AppCompatActivity {
         currentUserData = new ArrayList<>();
 
         Bundle bundle = getIntent().getExtras();
-        login = bundle.getString("Login");
+        userId = bundle.getString("userId");
+        currentUserData.addAll(myDB.getCurrentUserData(userId));
+        currentUser.setUserData(currentUser, currentUserData);
 
-        currentUserData.addAll(myDB.getCurrentUserData(login));
-        currentUser.current_user(currentUser, currentUserData);
-
-        dayOfWeek.setText(Timetable.polishDays(selectedDate));
+        dayOfWeek.setText(CalendarHelper.getDays(CalendarHelper.selectedDate));
 
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,12 +102,12 @@ public class AddLessonActivity extends AppCompatActivity {
                     lessons = myDB.getAllLessons(currentUser);
                     List<Lesson> dailyLessons = new ArrayList<>();
                     for (int i = 0; i < lessons.size(); i++) {
-                        if (CalendarHelper.dayFormatter(selectedDate).equals(lessons.get(i).getDayOfWeek())) {
+                        if (CalendarHelper.dayFormatter(CalendarHelper.selectedDate).equals(lessons.get(i).getDayOfWeek())) {
                             dailyLessons.add(lessons.get(i));
                         }
                     }
 
-                    boolean collision = false;
+                    boolean isValid = false;
                     for (int i = 0; i < dailyLessons.size(); i++) {
                         int hours = dailyLessons.get(i).getDuration()/60;
                         int minutes = dailyLessons.get(i).getDuration() - 60*hours;
@@ -115,18 +115,18 @@ public class AddLessonActivity extends AppCompatActivity {
 
                         if (startTime.getHour() > dailyLessons.get(i).getStartTime().getHour()) {
                             if (startTime.getHour() < endTime.getHour()) {
-                                collision = true;
+                                isValid = true;
                             } else if (startTime.getHour() == endTime.getHour() && startTime.getMinute() < endTime.getMinute()) {
-                                collision = true;
+                                isValid = true;
                             }
                         }
 
                         if (startTime.getHour() == dailyLessons.get(i).getStartTime().getHour()) {
                             if (startTime.getMinute() > dailyLessons.get(i).getStartTime().getMinute()) {
                                 if (startTime.getHour() < endTime.getHour()) {
-                                    collision = true;
+                                    isValid = true;
                                 } else if (startTime.getHour() == endTime.getHour() && startTime.getMinute() < endTime.getMinute()) {
-                                    collision = true;
+                                    isValid = true;
                                 }
                             }
                         }
@@ -137,73 +137,73 @@ public class AddLessonActivity extends AppCompatActivity {
 
                         if (endTimeNewLesson.getHour() > dailyLessons.get(i).getStartTime().getHour()) {
                             if (endTimeNewLesson.getHour() < endTime.getHour()) {
-                                collision = true;
+                                isValid = true;
                             } else if (endTimeNewLesson.getHour() == endTime.getHour() && endTimeNewLesson.getMinute() < endTime.getMinute()) {
-                                collision = true;
+                                isValid = true;
                             }
                         }
 
                         if (endTimeNewLesson.getHour() == dailyLessons.get(i).getStartTime().getHour()) {
                             if (endTimeNewLesson.getMinute() > dailyLessons.get(i).getStartTime().getMinute()) {
                                 if (endTimeNewLesson.getHour() < endTime.getHour()) {
-                                    collision = true;
+                                    isValid = true;
                                 } else if (endTimeNewLesson.getHour() == endTime.getHour() && endTimeNewLesson.getMinute() <= endTime.getMinute()) {
-                                    collision = true;
+                                    isValid = true;
                                 }
                             }
                         }
 
                         if (startTime.getHour() < dailyLessons.get(i).getStartTime().getHour() && endTimeNewLesson.getHour() > endTime.getHour()) {
-                            collision = true;
+                            isValid = true;
                         }
 
                         if (startTime.getHour() == dailyLessons.get(i).getStartTime().getHour() && endTimeNewLesson.getHour() > endTime.getHour()) {
                             if (startTime.getMinute() < dailyLessons.get(i).getStartTime().getMinute()) {
-                                collision = true;
+                                isValid = true;
                             }
                         }
 
                         if (startTime.getHour() < dailyLessons.get(i).getStartTime().getHour() && endTimeNewLesson.getHour() == endTime.getHour()) {
                             if (endTimeNewLesson.getMinute() > endTime.getMinute()) {
-                                collision = true;
+                                isValid = true;
                             }
                         }
 
                         if (startTime.getHour() == dailyLessons.get(i).getStartTime().getHour() && endTimeNewLesson.getHour() == endTime.getHour()) {
                             if (startTime.getMinute() < dailyLessons.get(i).getStartTime().getMinute() && endTimeNewLesson.getMinute() > endTime.getMinute()) {
-                                collision = true;
+                                isValid = true;
                             }
                         }
 
                     }
 
-                    if (!collision) {
+                    if (!isValid) {
                         Lesson newLesson = new Lesson(startTime, CalendarHelper.dayFormatter(CalendarHelper.selectedDate),
                                 newLessonRoom, newLessonName, newLessonDuration, currentUser);
                         myDB.addLesson(newLesson);
                         saveLesson();
                     } else {
-                        Toast.makeText(AddLessonActivity.this, "Nowa lekcja koliduje z inną!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddLessonActivity.this, "New lesson existed!", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(AddLessonActivity.this, "Wprowadzone dane są niepoprawne lub za krótkie", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddLessonActivity.this, "The entered data is incorrect or too short", Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
     
     public void cancelSaving() {
-        Intent intent = new Intent(this, Timetable.class);
+        Intent intent = new Intent(this, TimetableActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putString("Login", login);
+        bundle.putString("userId", userId);
         intent.putExtras(bundle);
         startActivity(intent);
     }
 
     public void saveLesson() {
-        Intent intent = new Intent(this, Timetable.class);
+        Intent intent = new Intent(this, TimetableActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putString("Login", login);
+        bundle.putString("userId", userId);
         intent.putExtras(bundle);
         startActivity(intent);
     }

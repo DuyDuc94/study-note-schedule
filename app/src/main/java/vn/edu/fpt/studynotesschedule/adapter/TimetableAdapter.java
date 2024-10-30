@@ -10,7 +10,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import vn.edu.fpt.studynotesschedule.R;
-import vn.edu.fpt.studynotesschedule.activity.Timetable;
+import vn.edu.fpt.studynotesschedule.activity.TimetableActivity;
+import vn.edu.fpt.studynotesschedule.helper.CalendarHelper;
 import vn.edu.fpt.studynotesschedule.model.Lesson;
 
 public class TimetableAdapter extends ArrayAdapter<String> {
@@ -31,7 +32,6 @@ public class TimetableAdapter extends ArrayAdapter<String> {
         RelativeLayout layout = convertView.findViewById(R.id.relativeLayout);
 
         if (convertView != null) {
-            // porownujemy miejsce w pamieci, a nie tekst!
             if (lesson == Lesson.selectedLesson)
                 layout.setBackgroundColor(Color.parseColor("#CCE5FF"));
         }
@@ -40,18 +40,18 @@ public class TimetableAdapter extends ArrayAdapter<String> {
         String endTime = "";
         String room = "";
 
-        for (int i = 0; i < Timetable.lessons.size(); i++) {
-            if(CalendarOperations.dayFormatter(CalendarOperations.selectedDate).equals(Timetable.lessons.get(i).getDayOfWeek())
-                    && lesson.equals(Timetable.lessons.get(i).getText())) {
-                room = Timetable.lessons.get(i).getRoom();
-                startTime = CalendarOperations.timeFormatter(Timetable.lessons.get(i).getStartTime());
-                int hours = Timetable.lessons.get(i).getDuration()/60;
-                int minutes = Timetable.lessons.get(i).getDuration() - 60*hours;
-                endTime = CalendarOperations.timeFormatter(Timetable.lessons.get(i).getStartTime().plusHours(hours).plusMinutes(minutes));
+        for (int i = 0; i < TimetableActivity.lessons.size(); i++) {
+            if(CalendarHelper.dayFormatter(CalendarHelper.selectedDate).equals(TimetableActivity.lessons.get(i).getDayOfWeek())
+                    && lesson.equals(TimetableActivity.lessons.get(i).getText())) {
+                room = TimetableActivity.lessons.get(i).getRoom();
+                startTime = CalendarHelper.timeFormatter(TimetableActivity.lessons.get(i).getStartTime());
+                int hours = TimetableActivity.lessons.get(i).getDuration()/60;
+                int minutes = TimetableActivity.lessons.get(i).getDuration() - 60*hours;
+                endTime = CalendarHelper.timeFormatter(TimetableActivity.lessons.get(i).getStartTime().plusHours(hours).plusMinutes(minutes));
             }
         }
         String timeText = startTime + " - " + endTime;
-        String roomText = "sala: " + room;
+        String roomText = "Room: " + room;
 
         lessonCell.setText(lesson);
         timeCell.setText(timeText);

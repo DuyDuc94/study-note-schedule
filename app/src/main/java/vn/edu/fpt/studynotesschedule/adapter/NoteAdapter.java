@@ -27,7 +27,6 @@ public class NoteAdapter extends ArrayAdapter<String> {
         TextView noteCell = convertView.findViewById(R.id.noteCell);
 
         if (convertView != null) {
-            // so sánh memory ref, không phải text
             if (note == Note.selectedNote)
                 noteCell.setBackgroundColor(Color.parseColor("#CCE5FF"));
         }

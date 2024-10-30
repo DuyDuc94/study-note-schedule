@@ -1,7 +1,6 @@
 package vn.edu.fpt.studynotesschedule.activity;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -9,14 +8,20 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddNote extends AppCompatActivity {
+import vn.edu.fpt.studynotesschedule.R;
+import vn.edu.fpt.studynotesschedule.helper.*;
+import vn.edu.fpt.studynotesschedule.model.*;
+
+public class AddNoteActivity extends AppCompatActivity {
     private User currentUser;
-    private String login;
+    private String userId;
     private List<String> currentUserData;
-    private DataBaseHelper myDB;
+    private DatabaseHelper myDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,19 +32,17 @@ public class AddNote extends AppCompatActivity {
         TextView noteDate = findViewById(R.id.noteDate);
         Button saveEdition = findViewById(R.id.saveEditionButton);
         Button cancelEdition = findViewById(R.id.cancelEditionButton);
-        myDB = new DataBaseHelper(AddNote.this);
+        myDB = new DatabaseHelper(AddNoteActivity.this);
         currentUser = new User();
         currentUserData = new ArrayList<>();
 
         Bundle bundle = getIntent().getExtras();
-        login = bundle.getString("Login");
+        userId = bundle.getString("userId");
+        currentUserData.addAll(myDB.getCurrentUserData(userId));
+        currentUser.setUserData(currentUser, currentUserData);
 
-        // wpiasanie danych do currentUser
-        currentUserData.addAll(myDB.current_user_data(login));
-        currentUser.current_user(currentUser, currentUserData);
-
-        noteDate.setText("Data: " + CalendarOperations.selectedDate.getDayOfMonth() + " " +
-                CalendarOperations.polishMonths(CalendarOperations.selectedDate));
+        noteDate.setText("Data: " + CalendarHelper.selectedDate.getDayOfMonth() + " " +
+                CalendarHelper.getMonths(CalendarHelper.selectedDate));
 
         cancelEdition.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,11 +56,11 @@ public class AddNote extends AppCompatActivity {
             public void onClick(View v) {
                 String newNoteName = noteName.getText().toString();
                 if (newNoteName.length() > 2) {
-                    Note newNote = new Note(newNoteName, CalendarOperations.selectedDate, currentUser);
+                    Note newNote = new Note(newNoteName, CalendarHelper.selectedDate, currentUser);
                     myDB.addNote(newNote);
                     activitySaveEdition();
                 } else {
-                    Toast.makeText(AddNote.this, "Notatka jest za krótka!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddNoteActivity.this, "The note is too short!", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -66,7 +69,7 @@ public class AddNote extends AppCompatActivity {
     public void activityCancelEdition () {
         Intent intent = new Intent(this, CalendarMain.class);
         Bundle bundle = new Bundle();
-        bundle.putString("Login", login);
+        bundle.putString("userId", userId);
         intent.putExtras(bundle);
         startActivity(intent);
     }
@@ -74,7 +77,7 @@ public class AddNote extends AppCompatActivity {
     public void activitySaveEdition () {
         Intent intent = new Intent(this, CalendarMain.class);
         Bundle bundle = new Bundle();
-        bundle.putString("Login", login);
+        bundle.putString("userId", userId);
         intent.putExtras(bundle);
         startActivity(intent);
     }

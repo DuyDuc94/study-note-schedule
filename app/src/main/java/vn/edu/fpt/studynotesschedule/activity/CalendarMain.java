@@ -17,10 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import vn.edu.fpt.studynotesschedule.R;
-import vn.edu.fpt.studynotesschedule.adapter.CalendarAdapter;
-import vn.edu.fpt.studynotesschedule.adapter.NoteAdapter;
-import vn.edu.fpt.studynotesschedule.helper.CalendarHelper;
-import vn.edu.fpt.studynotesschedule.helper.DatabaseHelper;
+import vn.edu.fpt.studynotesschedule.adapter.*;
+import vn.edu.fpt.studynotesschedule.helper.*;
 import vn.edu.fpt.studynotesschedule.model.*;
 
 public class CalendarMain extends AppCompatActivity implements CalendarAdapter.OnItemListener {
@@ -28,7 +26,7 @@ public class CalendarMain extends AppCompatActivity implements CalendarAdapter.O
     private RecyclerView recyclerView; // cửa sổ có tất cả các ngày
     private ListView lvNotesList;
     private Button goToCurrentMonth;
-    private String login;
+    private String userId;
     private List<String> currentUserData;
     private static User currentUser;
     public static DatabaseHelper myDB;
@@ -53,11 +51,10 @@ public class CalendarMain extends AppCompatActivity implements CalendarAdapter.O
         currentUser = new User();
         currentUserData = new ArrayList<>();
 
-        // loading current user
         Bundle bundle = getIntent().getExtras();
-        login = bundle.getString("Login");
-        currentUserData.addAll(myDB.getCurrentUserData(login));
-        currentUser.current_user(currentUser, currentUserData);
+        userId = bundle.getString("userId");
+        currentUserData.addAll(myDB.getCurrentUserData(userId));
+        currentUser.setUserData(currentUser, currentUserData);
 
         currentUserNoteList = myDB.getAllNotes(currentUser);
 
@@ -66,7 +63,7 @@ public class CalendarMain extends AppCompatActivity implements CalendarAdapter.O
 
         setMonthView();
 
-        // wybrana notatka (do usuniecia)
+        // selected note (to be deleted)
         lvNotesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
@@ -115,9 +112,9 @@ public class CalendarMain extends AppCompatActivity implements CalendarAdapter.O
     }
 
     public void setMonthView() {
-        currentMonth.setText(CalendarHelper.polishMonths(CalendarHelper.selectedDate));
-        previousMonth.setText(CalendarHelper.polishMonths(CalendarHelper.selectedDate.minusMonths(1)));
-        nextMonth.setText(CalendarHelper.polishMonths(CalendarHelper.selectedDate.plusMonths(1)));
+        currentMonth.setText(CalendarHelper.getMonths(CalendarHelper.selectedDate));
+        previousMonth.setText(CalendarHelper.getMonths(CalendarHelper.selectedDate.minusMonths(1)));
+        nextMonth.setText(CalendarHelper.getMonths(CalendarHelper.selectedDate.plusMonths(1)));
 
         ArrayList<LocalDate> daysOfMonth = CalendarHelper.fillCalendar(CalendarHelper.selectedDate);
 
@@ -128,10 +125,10 @@ public class CalendarMain extends AppCompatActivity implements CalendarAdapter.O
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(calendarAdapter);
 
-        // wroc do aktualnej daty
+        // go back to current date
         if (CalendarHelper.selectedDate.getMonth().equals(LocalDate.now().getMonth()) &&
                 CalendarHelper.selectedDate.getYear() == LocalDate.now().getYear()) {
-            // niewidoczny, gdy jestesmy na aktualnym miesiacu
+            // invisible when on the current month
             goToCurrentMonth.setVisibility(View.INVISIBLE);
         } else {
             goToCurrentMonth.setVisibility(View.VISIBLE);
@@ -139,7 +136,6 @@ public class CalendarMain extends AppCompatActivity implements CalendarAdapter.O
     }
 
     // ----------------------------------------
-    // zmiana miesiaca po kliknieciu przyciskow
     public void previousMonth(View view) {
         CalendarHelper.selectedDate = CalendarHelper.selectedDate.minusMonths(1);
         setMonthView();
@@ -151,7 +147,7 @@ public class CalendarMain extends AppCompatActivity implements CalendarAdapter.O
     }
     // ----------------------------------------
 
-    // wybrana data - przypisanie
+    // selected date - assignment
     @Override
     public void onItemClick(int position, LocalDate date) {
         if (date != null) {
@@ -166,7 +162,7 @@ public class CalendarMain extends AppCompatActivity implements CalendarAdapter.O
         fillListView();
     }
 
-    // zmiana notatek na String i wypelnienie listView
+    // change notes to String and fill listView
     private void fillListView() {
         List<Note> dailyNotes = new ArrayList<>();
 
@@ -176,7 +172,7 @@ public class CalendarMain extends AppCompatActivity implements CalendarAdapter.O
             }
         }
 
-        // zmiana na String
+        // change to String
         String [] notesToString = new String[dailyNotes.size()];
 
         int i = 0;
@@ -185,15 +181,15 @@ public class CalendarMain extends AppCompatActivity implements CalendarAdapter.O
             i += 1;
         }
 
-        // ustawienie adaptera notatki
+        // setting the note adapter
         NoteAdapter adapter = new NoteAdapter(this, notesToString);
         lvNotesList.setAdapter(adapter);
     }
 
     public void openAddNote() {
-        Intent intent = new Intent(this, AddNote.class);
+        Intent intent = new Intent(this, AddNoteActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putString("Login", login);
+        bundle.putString("userId", userId);
         intent.putExtras(bundle);
         startActivity(intent);
     }
@@ -201,7 +197,7 @@ public class CalendarMain extends AppCompatActivity implements CalendarAdapter.O
     public void openMainPage() {
         Intent intent = new Intent(this, MainActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putString("Login", login);
+        bundle.putString("userId", userId);
         intent.putExtras(bundle);
         startActivity(intent);
     }

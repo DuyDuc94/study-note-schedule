@@ -13,21 +13,22 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import vn.edu.fpt.studynotesschedule.R;
 import vn.edu.fpt.studynotesschedule.helper.DatabaseHelper;
 import vn.edu.fpt.studynotesschedule.model.Lesson;
 import vn.edu.fpt.studynotesschedule.model.User;
 
 public class MainActivity extends AppCompatActivity {
-    String login;
+    String userId;
     Button calendarButton, timetableButton;
     private List<String> currentUserData;
-    private User currentUserUser;
+    private User currentUser;
     private DatabaseHelper myDB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_page);
+        setContentView(R.layout.activity_main);
 
         calendarButton = findViewById(R.id.calendarButton);
         timetableButton = findViewById(R.id.timetableButton);
@@ -36,17 +37,17 @@ public class MainActivity extends AppCompatActivity {
         TextView currentUser = findViewById(R.id.currentUserMainPage);
 
         myDB = new DatabaseHelper(MainActivity.this);
-        currentUserUser = new User();
+        this.currentUser = new User();
         currentUserData = new ArrayList<>();
 
         Bundle bundle = getIntent().getExtras();
-        login = bundle.getString("Login");
-        currentUserData.addAll(myDB.getCurrentUserData(login));
-        currentUserUser.current_user(currentUserUser, currentUserData);
+        userId = bundle.getString("userId");
+        currentUserData.addAll(myDB.getCurrentUserData(userId));
+        this.currentUser.setUserData(this.currentUser, currentUserData);
 
         String nextLessonString = nextLesson();
         nextLesson.setText(nextLessonString);
-        currentUser.setText("Zalogowano jako: " + login);
+        currentUser.setText(this.currentUser.getName() + " " + this.currentUser.getSurname());
 
         calendarButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,9 +72,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void openTimetable () {
-        Intent intent = new Intent(this, Timetable.class);
+        Intent intent = new Intent(this, TimetableActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putString("Login", login);
+        bundle.putString("userId", userId);
         intent.putExtras(bundle);
         startActivity(intent);
     }
@@ -81,13 +82,13 @@ public class MainActivity extends AppCompatActivity {
     public void openCalendar() {
         Intent intent = new Intent(this, CalendarMain.class);
         Bundle bundle = new Bundle();
-        bundle.putString("Login", login);
+        bundle.putString("userId", userId);
         intent.putExtras(bundle);
         startActivity(intent);
     }
 
     public void openStart() {
-        Intent intent = new Intent(this, Start.class);
+        Intent intent = new Intent(this, StartActivity.class);
         startActivity(intent);
     }
 
@@ -97,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
         int currentDay = LocalDate.now().getDayOfWeek().getValue();
         int timeDifference = 1000000;
 
-        List<Lesson> lessons = myDB.getAllLessons(currentUserUser);
+        List<Lesson> lessons = myDB.getAllLessons(currentUser);
 
         String lessonDay = "";
         for (int i = 0; i < lessons.size(); i++) {
@@ -138,12 +139,12 @@ public class MainActivity extends AppCompatActivity {
                     lessonDay = lessons.get(i).getDayOfWeek();
                 } else if (now.getHour() < lessons.get(i).getStartTime().getHour()) {
                     lessonDayInt = 0;
-                    lessonDay = "dziś";
+                    lessonDay = "today";
                 }
             } else if (currentDay == lessonDayInt && now.getHour() == lessons.get(i).getStartTime().getHour()) {
                 if (lessons.get(i).getStartTime().getMinute() > now.getMinute()) {
                     lessonDayInt = 7;
-                    lessonDay = "dziś";
+                    lessonDay = "today";
                 } else {
                     lessonDayInt = 0;
                     lessonDay = lessons.get(i).getDayOfWeek();
@@ -152,32 +153,6 @@ public class MainActivity extends AppCompatActivity {
             else {
                 lessonDayInt = 7 - Math.abs(lessonDayInt - currentDay);
                 lessonDay = lessons.get(i).getDayOfWeek();
-            }
-
-            switch (lessonDay) {
-                case "Mon":
-                    lessonDay = "Pon";
-                    break;
-                case "Tue":
-                    lessonDay = "Wt";
-                    break;
-                case "Wed":
-                    lessonDay = "Śr";
-                    break;
-                case "Thu":
-                    lessonDay = "Czw";
-                    break;
-                case "Fri":
-                    lessonDay = "Pt";
-                    break;
-                case "Sat":
-                    lessonDay = "Sob";
-                    break;
-                case "Sun":
-                    lessonDay = "Niedz";
-                    break;
-                default:
-                    break;
             }
 
             int currentTimeDifference = ((lessons.get(i).getStartTime().getHour() - now.getHour()) * 60) + (lessons.get(i).getStartTime().getMinute() - now.getMinute()) + (lessonDayInt * 24 * 60);
@@ -199,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
         String next = "";
 
         if (!nextLesson.equals(""))
-            next = "Następne zajęcia: " + nextLesson;
+            next = "Next lesson: " + nextLesson;
 
         return next;
     }

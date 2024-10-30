@@ -3,24 +3,24 @@ package vn.edu.fpt.studynotesschedule.model;
 import java.util.List;
 
 public class User {
-    private int id;
+    private String id;
     private String name;
     private String surname;
     private String university;
-    private String login;
+    private String username;
     private String password;
 
     public User() {}
 
-    public User(String name, String surname, String university, String login, String password) {
+    public User(String name, String surname, String university, String username, String password) {
         this.name = name;
         this.surname = surname;
         this.university = university;
-        this.login = login;
+        this.username = username;
         this.password = password;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -36,15 +36,15 @@ public class User {
         this.university = university;
     }
 
-    public void setLogin(String login) {
-        this.login = login;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public void setPassword(String password) {
         this.password = password;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
@@ -60,21 +60,20 @@ public class User {
         return university;
     }
 
-    public String getLogin() {
-        return login;
+    public String getUsername() {
+        return username;
     }
 
     public String getPassword() {
         return password;
     }
 
-    public User current_user (User currentUser, List<String> data){
-        int x = Integer.parseInt(data.get(0));
-        currentUser.setId(x);
+    public User setUserData(User currentUser, List<String> data){
+        currentUser.setId(data.get(0));
         currentUser.setName(data.get(1));
         currentUser.setSurname(data.get(2));
         currentUser.setUniversity(data.get(3));
-        currentUser.setLogin(data.get(4));
+        currentUser.setUsername(data.get(4));
         currentUser.setPassword(data.get(5));
         return currentUser;
     }

@@ -1,28 +1,33 @@
 package vn.edu.fpt.studynotesschedule.activity;
 
-import static android.smartstudy.CalendarOperations.selectedDate;
-
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Timetable extends AppCompatActivity {
+import vn.edu.fpt.studynotesschedule.R;
+import vn.edu.fpt.studynotesschedule.adapter.TimetableAdapter;
+import vn.edu.fpt.studynotesschedule.helper.*;
+import vn.edu.fpt.studynotesschedule.model.*;
+
+public class TimetableActivity extends AppCompatActivity {
     private User currentUser;
-    private String login;
+    private String userId;
     private List<String> currentUserData;
-    private DataBaseHelper myDB;
+    private DatabaseHelper myDB;
     private TextView currentDay, previousDay, nextDay;
     ListView lvLessons;
-    static List <Lesson> lessons;
+    public static List <Lesson> lessons;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,19 +42,19 @@ public class Timetable extends AppCompatActivity {
         Button backButton = findViewById(R.id.timetableToMainPage);
         lvLessons = findViewById(R.id.lessonsListView);
 
-        myDB = new DataBaseHelper(Timetable.this);
+        myDB = new DatabaseHelper(TimetableActivity.this);
         currentUser = new User();
         currentUserData = new ArrayList<>();
 
-        // wczytanie currentUser
         Bundle bundle = getIntent().getExtras();
-        login = bundle.getString("Login");
-        currentUserData.addAll(myDB.current_user_data(login));
-        currentUser.current_user(currentUser, currentUserData);
+        userId = bundle.getString("userId");
+        currentUserData.addAll(myDB.getCurrentUserData(userId));
+        currentUser.setUserData(currentUser, currentUserData);
 
         lessons = myDB.getAllLessons(currentUser);
+        System.out.println(">>> lessons: " + lessons);
 
-        CalendarOperations.selectedDate = LocalDate.now();
+        CalendarHelper.selectedDate = LocalDate.now();
         Lesson.selectedLesson = "";
 
         setDayView();
@@ -74,7 +79,7 @@ public class Timetable extends AppCompatActivity {
             public void onClick(View view) {
                 if(!Lesson.selectedLesson.equals("")) {
                     for (int i = 0; i < lessons.size(); i++) {
-                        if (Lesson.selectedLesson.equals(lessons.get(i).getText()) && CalendarOperations.dayFormatter(selectedDate).equals(lessons.get(i).getDayOfWeek())) {
+                        if (Lesson.selectedLesson.equals(lessons.get(i).getText()) && CalendarHelper.dayFormatter(CalendarHelper.selectedDate).equals(lessons.get(i).getDayOfWeek())) {
                             lessons = myDB.deleteLesson(Lesson.selectedLesson, lessons.get(i).getDayOfWeek(), lessons, currentUser);
                             setDayView();
                             Lesson.selectedLesson = "";
@@ -93,19 +98,19 @@ public class Timetable extends AppCompatActivity {
     }
 
     private void setDayView () {
-        currentDay.setText(polishDays(selectedDate));
-        previousDay.setText(polishDays(selectedDate.minusDays(1)));
-        nextDay.setText(polishDays(selectedDate.plusDays(1)));
+        currentDay.setText(CalendarHelper.getDays(CalendarHelper.selectedDate));
+        previousDay.setText(CalendarHelper.getDays(CalendarHelper.selectedDate.minusDays(1)));
+        nextDay.setText(CalendarHelper.getDays(CalendarHelper.selectedDate.plusDays(1)));
         fillLessonListView();
     }
 
     public void previousDay (View view) {
-        CalendarOperations.selectedDate = CalendarOperations.selectedDate.minusDays(1);
+        CalendarHelper.selectedDate = CalendarHelper.selectedDate.minusDays(1);
         setDayView();
     }
 
     public void nextDay (View view) {
-        CalendarOperations.selectedDate = CalendarOperations.selectedDate.plusDays(1);
+        CalendarHelper.selectedDate = CalendarHelper.selectedDate.plusDays(1);
         setDayView();
     }
 
@@ -119,7 +124,7 @@ public class Timetable extends AppCompatActivity {
         List <Lesson> dailyLessons = new ArrayList<>();
 
         for (int i = 0; i < lessons.size(); i++) {
-            if (CalendarOperations.dayFormatter(selectedDate).equals(lessons.get(i).getDayOfWeek())) {
+            if (CalendarHelper.dayFormatter(CalendarHelper.selectedDate).equals(lessons.get(i).getDayOfWeek())) {
                 dailyLessons.add(lessons.get(i));
             }
         }
@@ -142,7 +147,7 @@ public class Timetable extends AppCompatActivity {
     public void openAddLesson() {
         Intent intent = new Intent(this, AddLessonActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putString("Login", login);
+        bundle.putString("userId", userId);
         intent.putExtras(bundle);
         startActivity(intent);
     }
@@ -150,7 +155,7 @@ public class Timetable extends AppCompatActivity {
     public void openMainPage() {
         Intent intent = new Intent(this, MainActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putString("Login", login);
+        bundle.putString("userId", userId);
         intent.putExtras(bundle);
         startActivity(intent);
     }
@@ -168,41 +173,4 @@ public class Timetable extends AppCompatActivity {
             }
         }
     }
-
-    public static String polishDays(LocalDate date) {
-        String day = "";
-        String dayString;
-        for (int i = 0; i < 7; i++) {
-            // minusDays do emulatora -> przesuniecie o 1 dzien
-            dayString = CalendarOperations.dayNumberFormatter(date.minusDays(1));
-
-            switch (dayString) {
-                case "1":
-                    day = "Poniedziałek";
-                    break;
-                case "2":
-                    day = "Wtorek";
-                    break;
-                case "3":
-                    day = "Środa";
-                    break;
-                case "4":
-                    day = "Czwartek";
-                    break;
-                case "5":
-                    day = "Piątek";
-                    break;
-                case "6":
-                    day = "Sobota";
-                    break;
-                case "7":
-                    day = "Niedziela";
-                    break;
-                default:
-                    break;
-            }
-        }
-        return day;
-    }
-
 }

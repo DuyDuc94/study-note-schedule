@@ -8,20 +8,15 @@
     <string name="action_sign_in_short">Login</string>
     <string name="welcome">"Welcome!"</string>
     <string name="invalid_username">Not a valid username</string>
-    <string name="invalid_password">Password must be >5 characters</string>
+    <string name="invalid_password">Password must be > 5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="title_activity_zaloguj">Login</string>
 
-    <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
     <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
-
-    <!-- Stringi w activity_add_lesson -->
     <string name="addLessonTextViewMain">Add Lesson</string>
     <string name="addLessonEditTextHint">Name</string>
     <string name="addLessonTextViewStartTime">Start time: </string>
@@ -35,14 +30,12 @@
     <string name="addLessonButtonSave">Save</string>
     <string name="addLessonButtonCancel">Cancel</string>
 
-    <!-- Stringi w activity_add_note -->
     <string name="addNoteTextViewName">Name: </string>
     <string name="addNoteEditTextHintMain">...</string>
     <string name="addNoteTextViewDate">Date</string>
     <string name="addNoteButtonSave">Save</string>
     <string name="addNoteButtonCancel">Cancel</string>
 
-    <!-- Stringi w activity_calendar -->
     <string name="calendarButtonPrev">prev</string>
     <string name="calendarTextViewAct">act</string>
     <string name="calendarButtonNext">next</string>
@@ -53,9 +46,9 @@
     <string name="calendarTextViewThu">Thu</string>
     <string name="calendarTextViewFri">Fri</string>
     <string name="calendarTextViewSat">Sat</string>
-    <string name="calendarTextViewSun">Sub</string>
-    <string name="calendarButtonAddNote">Add new note: </string>
-    <string name="calendarButtonDeleteNote">Delete note</string>
+    <string name="calendarTextViewSun">Sun</string>
+    <string name="calendarButtonAddNote">Add Note</string>
+    <string name="calendarButtonDeleteNote">Delete Note</string>
     <string name="calendarBackButton">Home</string>
 
     <!-- activity_login -->
@@ -66,8 +59,8 @@
 
     <!-- activity_main -->
     <string name="mainPageTextView">next</string>
-    <string name="mainPageCurrentUser">currentUser</string>
-    <string name="mainPageLogOut">Wyloguj</string>
+    <string name="mainPageCurrentUser">User: </string>
+    <string name="mainPageLogOut">Logout</string>
 
     <!-- activity_register -->
     <string name="registerEditTextHintName">Name</string>
@@ -86,9 +79,9 @@
     <string name="timetableButtonPrev">prev</string>
     <string name="timetableTextViewActualDay">actualDay</string>
     <string name="timetableButtonNext">next</string>
-    <string name="timetableButtonAddLesson">Dodaj lekcję</string>
-    <string name="timetableButtonDeleteLesson">Usuń lekcję</string>
-    <string name="timetableBackButton">Strona Główna</string>
+    <string name="timetableButtonAddLesson">Add lesson</string>
+    <string name="timetableButtonDeleteLesson">Delete lesson</string>
+    <string name="timetableBackButton">Home</string>
 
     <!-- calendar_cell -->
     <string name="calendarCellTextView">1</string>
